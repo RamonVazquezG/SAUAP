@@ -6,7 +6,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalTime;
-
+// rama desarrollo
 @Entity
 @Table(name = "asignacion")
 public class Asignacion {
