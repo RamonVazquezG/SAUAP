@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>SAUAP</title>
+  <style type="text/css">
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background-color: #f09a3c;
+      color: #000000;
+      padding: 15px;
+      font-weight: bold;
+      font-size: 28px;
+      width: 100%;
+    }
+
+    .main-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .container {
+      background-color: #fde8cf;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 1200px;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      transition: background-color 0.6s ease;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 25px;
+      height: 500px;
+      width: 100%;
+    }
+
+    .menu-button {
+      position: relative;
+      overflow: hidden;
+      background-color: #f2a64b;
+      border: none;
+      border-radius: 15px;
+      padding: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s, background-color 0.3s;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .menu-button:hover {
+      background-color: #e89227;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .button-large {
+      grid-column: 1;
+      grid-row: span 2;
+      height: 100%;
+    }
+
+    .button-half {
+      grid-column: 2;
+      grid-row: 1;
+      height: 100%;
+    }
+
+    .button-half-second {
+      grid-column: 2;
+      grid-row: 2;
+      height: 100%;
+    }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      transform: scale(0);
+      pointer-events: none;
+      z-index: 1;
+      transition: transform 0.5s ease-out, opacity 0.3s ease;
+    }
+
+    .content {
+      position: relative;
+      z-index: 3;
+      display: none;
+      padding: 25px;
+      background-color: #f2a64b;
+      height: calc(100% - 60px);
+      overflow-y: auto;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: left;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .back {
+      background-color: #fde8cf;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      float: right;
+      transition: background-color 0.3s;
+      position: relative;
+      z-index: 3;
+      display: none;
+      margin-top: 10px;
+    }
+
+    .back:hover {
+      background-color: #f2c890;
+    }
+
+    input {
+      width: 95%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 15px;
+      border: none;
+      background-color: #fff;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .submit {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background-color: #fde8cf;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background-color 0.3s;
+    }
+
+    .submit:hover {
+      background-color: #f2c890;
+    }
+  </style>
+  <script type="text/javascript">
+//<![CDATA[
+    function createRipple(e, color) {
+      const container = document.getElementById('container');
+      const ripple = document.createElement('span');
+      ripple.classList.add('ripple');
+      ripple.style.backgroundColor = color;
+
+      const rect = container.getBoundingClientRect();
+      ripple.style.left = `${e.clientX - rect.left - 10}px`;
+      ripple.style.top = `${e.clientY - rect.top - 10}px`;
+
+      container.appendChild(ripple);
+
+      const maxDim = Math.max(rect.width, rect.height);
+      setTimeout(() => {
+        ripple.style.transform = `scale(${maxDim / 10})`;
+      }, 10);
+
+      setTimeout(() => ripple.remove(), 600);
+    }
+
+    function mostrarFormulario(e) {
+      createRipple(e, '#f2a64b');
+      
+      // Ocultar menú después de la animación
+      setTimeout(() => {
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('formulario').style.display = 'block';
+        document.getElementById('backButton').style.display = 'inline-block';
+        document.getElementById('container').style.backgroundColor = '#f2a64b';
+      }, 600);
+    }
+
+    function mostrarUnidadAprendizaje(e) {
+      createRipple(e, '#f2a64b');
+      
+      // Ocultar menú después de la animación
+      setTimeout(() => {
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('unidadAprendizaje').style.display = 'block';
+        document.getElementById('backButton').style.display = 'inline-block';
+        document.getElementById('container').style.backgroundColor = '#f2a64b';
+      }, 600);
+    }
+
+    function mostrarConsulta(e) {
+      createRipple(e, '#f2a64b');
+      
+      // Ocultar menú después de la animación
+      setTimeout(() => {
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('consulta').style.display = 'block';
+        document.getElementById('backButton').style.display = 'inline-block';
+        document.getElementById('container').style.backgroundColor = '#f2a64b';
+      }, 600);
+    }
+
+    function regresarMenu(e) {
+      createRipple(e, '#fde8cf');
+      
+      // Ocultar contenido y mostrar menú después de la animación
+      setTimeout(() => {
+        document.getElementById('formulario').style.display = 'none';
+        document.getElementById('unidadAprendizaje').style.display = 'none';
+        document.getElementById('consulta').style.display = 'none';
+        document.getElementById('backButton').style.display = 'none';
+        document.getElementById('menu').style.display = 'grid';
+        document.getElementById('container').style.backgroundColor = '#fde8cf';
+      }, 600);
+    }
+//]]>
+  </script>
+</head>
+<body>
+  <div class="header">SAUAP</div>
+
+  <div class="main-container">
+    <div class="container" id="container">
+      <div class="menu-grid" id="menu">
+        <button type="button" class="menu-button button-large" onclick="mostrarFormulario(event)">
+          Altas<br />profesor
+        </button>
+        <button type="button" class="menu-button button-half" onclick="mostrarUnidadAprendizaje(event)">
+          Altas<br />unidad de aprendizaje
+        </button>
+        <button type="button" class="menu-button button-half-second" onclick="mostrarConsulta(event)">
+          Consulta<br />unidad de aprendizaje
+        </button>
+      </div>
+
+      <button class="back" id="backButton" onclick="regresarMenu(event)">Regresar</button>
+
+      <div class="content" id="formulario">
+        <h2>Altas profesor</h2>
+        <form action="#" method="post">
+          <p><strong>ID automático :</strong> 0000</p>
+          <label for="nombre">Nombre:</label><br />
+          <input type="text" id="nombre" name="nombre" /><br />
+
+          <label for="apellido1">Primer Apellido:</label><br />
+          <input type="text" id="apellido1" name="apellido1" /><br />
+
+          <label for="apellido2">Segundo Apellido:</label><br />
+          <input type="text" id="apellido2" name="apellido2" /><br />
+
+          <label for="rfc">RFC:</label><br />
+          <input type="text" id="rfc" name="rfc" /><br />
+
+          <input type="submit" value="Subir" class="submit" />
+        </form>
+      </div>
+
+      <div class="content" id="unidadAprendizaje">
+        <h2>Altas unidad de aprendizaje</h2>
+        <p>Formulario para altas de unidades de aprendizaje (en desarrollo)</p>
+        <form action="#" method="post">
+          <p><strong>ID automático :</strong> 0000</p>
+          <label for="nombre">Nombre de la unidad de aprendizaje:</label><br />
+          <input type="text" id="nombre" name="nombre" /><br />
+
+          <label for="horas_clase">No. Horas clase:</label><br />
+          <input type="number" id="apellido1" name="apellido1" /><br />
+
+          <label for="horas_taller">No. Horas taller:</label><br />
+          <input type="number" id="apellido2" name="apellido2" /><br />
+
+          <label for="horas_laboratorio">No. Horas Laboratorio:</label><br />
+          <input type="number" id="rfc" name="rfc" /><br />
+
+          <input type="submit" value="Subir" class="submit" />
+        </form>
+      </div>
+
+      <div class="content" id="consulta">
+        <h2>Consulta unidad de aprendizaje</h2>
+        <p>Formulario para consulta de unidades de aprendizaje (en desarrollo)</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
