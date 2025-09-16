@@ -1,4 +1,4 @@
-package mx.sauap;
+package mx.sauap.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -6,7 +6,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalTime;
-// rama desarrollo
+// ramas
 @Entity
 @Table(name = "asignacion")
 public class Asignacion {
