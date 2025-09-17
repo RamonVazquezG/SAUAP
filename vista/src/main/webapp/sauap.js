@@ -1,12 +1,5 @@
 //<![CDATA[
 // Datos de ejemplo (simulando una base de datos)
-var unidadesAprendizaje = [
-    { id: 1, nombre: "Matemáticas Básicas", profesores: ["Juan Pérez"], horasClase: 3, horasTaller: 1, horasLaboratorio: 0 },
-    { id: 2, nombre: "Programación I", profesores: ["María García", "Carlos López"], horasClase: 2, horasTaller: 2, horasLaboratorio: 2 },
-    { id: 3, nombre: "Física General", profesores: [], horasClase: 4, horasTaller: 0, horasLaboratorio: 2 },
-    { id: 4, nombre: "Química Orgánica", profesores: ["Ana Martínez"], horasClase: 3, horasTaller: 0, horasLaboratorio: 3 },
-    { id: 5, nombre: "Base de Datos", profesores: ["Roberto Sánchez", "Laura Hernández"], horasClase: 2, horasTaller: 1, horasLaboratorio: 2 }
-];
 
 // Simulación de profesores en la base de datos
 var profesores = [
@@ -457,4 +450,26 @@ function eliminarUnidad() {
         alert('Unidad eliminada correctamente.');
     }
 }
+function cargarUnidades() {
+    fetch("consultarUA")
+        .then(resp => resp.json())
+        .then(data => {
+            const tbody = document.querySelector("#tabla-unidades tbody");
+            tbody.innerHTML = "";
+            data.forEach(ua => {
+                let row = `
+                    <tr>
+                        <td>${ua.id}</td>
+                        <td>${ua.nombre}</td>
+                        <td>${ua.profesores ? ua.profesores.map(p => p.nombre).join(", ") : ""}</td>
+                        <td>${ua.horasClase}</td>
+                        <td>${ua.horasTaller}</td>
+                        <td>${ua.horasLaboratorio}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        });
+}
+
 //]]>
