@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-
+//commit
 @Entity
 @Table(name = "profesor")
 public class Profesor {
