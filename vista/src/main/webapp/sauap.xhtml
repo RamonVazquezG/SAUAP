@@ -95,9 +95,12 @@
         <div class="content" id="consulta">
             <h2>Consulta unidad de aprendizaje</h2>
 
-            <button id="btn-modificar" class="action-button" onclick="modificarUnidad()" disabled="disabled">Modificar</button>
-            <button id="btn-asignar" class="action-button" onclick="asignarProfesor()" disabled="disabled">Asignar Profesores</button>
-            <button id="btn-eliminar" class="action-button" onclick="eliminarUnidad()" disabled="disabled">Eliminar</button>
+            <div class="action-buttons">
+                <button id="btn-modificar" class="action-button" onclick="modificarUnidad()" disabled="disabled">Modificar</button>
+                <button id="btn-asignar" class="action-button" onclick="asignarProfesor()" disabled="disabled">Asignar Profesores</button>
+                <button id="btn-horario" class="action-button" onclick="asignarHorario()" disabled="disabled">Asignar Horario</button>
+                <button id="btn-eliminar" class="action-button" onclick="eliminarUnidad()" disabled="disabled">Eliminar</button>
+            </div>
 
             <table id="tabla-unidades" class="units-table">
                 <thead>
@@ -118,6 +121,23 @@
     </div>
 </div>
 
+<!-- Modal para asignar horario -->
+<div class="modal-backdrop" id="modal-horario-backdrop">
+    <div class="modal" style="max-width: 800px;">
+        <div class="modal-header">
+            <div class="modal-title" id="modal-horario-title">Asignar Horario</div>
+            <button class="close-button" onclick="cerrarModalHorario()">×</button>
+        </div>
+        <div class="horario-container" id="horario-container">
+            <!-- Horario se generará dinámicamente -->
+        </div>
+        <div class="modal-actions">
+            <button class="modal-button secondary" onclick="cerrarModalHorario()">Cancelar</button>
+            <button class="modal-button primary" onclick="guardarHorario()">Guardar Horario</button>
+        </div>
+    </div>
+</div>
+
 <!-- Modal para asignar profesor -->
 <div class="modal-backdrop" id="modal-backdrop">
     <div class="modal">
@@ -134,6 +154,8 @@
         </div>
     </div>
 </div>
+
+
 
 <script type="text/javascript" src="sauap.js"></script>
 </body>
