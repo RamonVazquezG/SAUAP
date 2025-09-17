@@ -310,6 +310,7 @@ function actualizarEstadoBotones() {
         btnModificar.disabled = false;
         btnAsignar.disabled = false;
         btnEliminar.disabled = false;
+        btnHorario.disabled = false;
         // Para XHTML, también necesitamos eliminar el atributo disabled
         btnModificar.removeAttribute('disabled');
         btnAsignar.removeAttribute('disabled');
@@ -444,13 +445,13 @@ function eliminarUnidad() {
     }
 
     // Buscar la unidad seleccionada
-    var unidad = unidadesAprendizaje.find(function(u) {
+    var unidad = unidadesAprendizaje.find(function (u) {
         return u.id === selectedRowId;
     });
 
     if (unidad && confirm('¿Está seguro de que desea eliminar la unidad: ' + unidad.nombre + '?')) {
         // En un sistema real, esto eliminaría el registro de la base de datos
-        unidadesAprendizaje = unidadesAprendizaje.filter(function(u) {
+        unidadesAprendizaje = unidadesAprendizaje.filter(function (u) {
             return u.id !== selectedRowId;
         });
 
@@ -462,6 +463,8 @@ function eliminarUnidad() {
 
         alert('Unidad eliminada correctamente.');
     }
+}
+
     // Función para asignar horario
     function asignarHorario() {
         if (selectedRowId === null) {
@@ -470,7 +473,7 @@ function eliminarUnidad() {
         }
 
         // Buscar la unidad seleccionada
-        unidadHorario = unidadesAprendizaje.find(function(u) {
+        unidadHorario = unidadesAprendizaje.find(function (u) {
             return u.id === selectedRowId;
         });
 
@@ -530,7 +533,7 @@ function eliminarUnidad() {
 
         // Días de la semana
         var dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-        dias.forEach(function(dia) {
+        dias.forEach(function (dia) {
             var th = document.createElement('th');
             th.textContent = dia;
             headerRow.appendChild(th);
@@ -568,7 +571,7 @@ function eliminarUnidad() {
                 }
 
                 // Agregar evento de clic
-                cell.addEventListener('click', function() {
+                cell.addEventListener('click', function () {
                     toggleCeldaHorario(this);
                 });
 
@@ -695,5 +698,5 @@ function eliminarUnidad() {
 
         alert('Horario guardado correctamente para ' + unidadHorario.nombre);
     }
-}
+
 //]]>
