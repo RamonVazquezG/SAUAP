@@ -16,7 +16,7 @@ public class FacadeUsuario {
     }
 
     public void saveUsario(Usuario usuario){
-        delegateUsuario.saveUsario(usuario);
+        delegateUsuario.saveUsuario(usuario);
     }
 
 }
