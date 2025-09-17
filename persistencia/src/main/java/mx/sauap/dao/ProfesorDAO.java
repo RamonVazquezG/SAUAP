@@ -19,7 +19,10 @@ public class ProfesorDAO extends AbstractDAO<Profesor> {
         return entityManager
                 .createQuery("SELECT a FROM Profesor a", Profesor.class)
                 .getResultList();
+
+
     }
+    ///
 
     @Override
     public EntityManager getEntityManager() {

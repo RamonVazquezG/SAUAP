@@ -49,6 +49,7 @@ public class ServiceLocator {
     }
 
     public static AsignacionDAO getInstanceAsignacionDAO(){
+
         if(asignacionDAO == null){
             asignacionDAO = new AsignacionDAO(getEntityManager());
             return asignacionDAO;
@@ -56,7 +57,7 @@ public class ServiceLocator {
             return asignacionDAO;
         }
     }
-
+//
     public static UnidadAprendizajeDAO getInstanceUnidadAprendizajeDAO(){
         if(unidadAprendizajeDAO == null){
             unidadAprendizajeDAO = new UnidadAprendizajeDAO(getEntityManager());

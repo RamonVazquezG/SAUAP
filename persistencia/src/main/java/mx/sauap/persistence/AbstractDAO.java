@@ -34,7 +34,7 @@ public abstract class AbstractDAO<T> {
         executeInsideTransaction(em -> em.merge(entity));
     }
 
-    // Delete an entity
+
     public void delete(T entity) {
         executeInsideTransaction(em -> em.remove(em.contains(entity) ? entity : em.merge(entity)));
     }
@@ -54,7 +54,7 @@ public abstract class AbstractDAO<T> {
         }));
     }
 
-    // Find all
+
     public List<T> findAll() {
         return execute(em ->
                 em.createQuery("SELECT e FROM " + entityClass.getSimpleName() + " e", entityClass)

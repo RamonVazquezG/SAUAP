@@ -20,7 +20,7 @@ public class AsignacionDAO extends AbstractDAO<Asignacion> {
                 .createQuery("SELECT a FROM Asignacion a", Asignacion.class)
                 .getResultList();
     }
-
+///
     @Override
     public EntityManager getEntityManager() {
         return entityManager;

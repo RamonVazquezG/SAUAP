@@ -21,6 +21,7 @@ public class UnidadAprendizajeDAO extends AbstractDAO<UnidadAprendizaje> {
                 .getResultList();
     }
 
+    //
     @Override
     public EntityManager getEntityManager() {
         return entityManager;
