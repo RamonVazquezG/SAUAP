@@ -27,7 +27,8 @@
 
         <div class="content" id="formulario">
             <h2>Altas profesor</h2>
-            <form action="#" method="post" onsubmit="return validarRFC(event)">
+
+            <form action="AltaProfesorServlet" method="post" onsubmit="return validarRFC(event)">
                 <p><strong>ID automático :</strong> 0000</p>
 
                 <div class="form-group">
@@ -58,46 +59,50 @@
             </form>
         </div>
 
+
         <div class="content" id="unidadAprendizaje">
             <h2>Altas unidad de aprendizaje</h2>
             <p>Formulario para altas de unidades de aprendizaje</p>
-            <form action="#" method="post" onsubmit="return validarFormularioAsignacion(event)">
+
+
+            <form action="AltaUnidadServlet" method="post" onsubmit="return validarFormularioAsignacion(event)">
                 <p><strong>ID automático :</strong> 0000</p>
 
                 <div class="form-group">
                     <label for="nombre_asignacion">Nombre de la unidad de aprendizaje:</label>
-                    <input type="text" id="nombre_asignacion" name="nombre_asignacion" onblur="validarNombreAsignacion()" />
+                    <input type="text" id="nombre_asignacion" name="nombre" onblur="validarNombreAsignacion()" />
                     <div id="error_nombre_asignacion" class="error">El nombre de la asignación no puede estar vacío</div>
                 </div>
 
                 <div class="form-group">
                     <span class="hours-label">No. Horas clase:</span>
-                    <input type="number" id="horas_clase" name="horas_clase" min="0" max="4"
-                           onchange="validarHoras(this)" onblur="validarHoras(this)" />
+                    <input type="number" id="horas_clase" name="horasClase" min="0" max="4" onchange="validarHoras(this)" onblur="validarHoras(this)" />
                 </div>
 
                 <div class="form-group">
                     <span class="hours-label">No. Horas taller:</span>
-                    <input type="number" id="horas_taller" name="horas_taller" min="0" max="4"
-                           onchange="validarHoras(this)" onblur="validarHoras(this)" />
+                    <input type="number" id="horas_taller" name="horasTaller" min="0" max="4" onchange="validarHoras(this)" onblur="validarHoras(this)" />
                 </div>
 
                 <div class="form-group">
                     <span class="hours-label">No. Horas Laboratorio:</span>
-                    <input type="number" id="horas_laboratorio" name="horas_laboratorio" min="0" max="4"
-                           onchange="validarHoras(this)" onblur="validarHoras(this)" />
+                    <input type="number" id="horas_laboratorio" name="horasLaboratorio" min="0" max="4" onchange="validarHoras(this)" onblur="validarHoras(this)"/>
                 </div>
 
-                <input type="submit" value="Subir" class="submit" />
+                <input type="submit" value="Registrar Unidad" class="submit" />
             </form>
         </div>
+
 
         <div class="content" id="consulta">
             <h2>Consulta unidad de aprendizaje</h2>
 
-            <button id="btn-modificar" class="action-button" onclick="modificarUnidad()" disabled="disabled">Modificar</button>
-            <button id="btn-asignar" class="action-button" onclick="asignarProfesor()" disabled="disabled">Asignar Profesores</button>
-            <button id="btn-eliminar" class="action-button" onclick="eliminarUnidad()" disabled="disabled">Eliminar</button>
+            <div class="action-buttons">
+                <button id="btn-modificar" class="action-button" onclick="modificarUnidad()" disabled="disabled">Modificar</button>
+                <button id="btn-asignar" class="action-button" onclick="asignarProfesor()" disabled="disabled">Asignar Profesores</button>
+                <button id="btn-horario" class="action-button" onclick="asignarHorario()" disabled="disabled">Asignar Horario</button>
+                <button id="btn-eliminar" class="action-button" onclick="eliminarUnidad()" disabled="disabled">Eliminar</button>
+            </div>
 
             <table id="tabla-unidades" class="units-table">
                 <thead>
@@ -118,7 +123,9 @@
     </div>
 </div>
 
-<!-- Modal para asignar profesor -->
+
+
+<!-- Modal para asignar -->
 <div class="modal-backdrop" id="modal-backdrop">
     <div class="modal">
         <div class="modal-header">
@@ -131,6 +138,23 @@
         <div class="modal-actions">
             <button class="modal-button secondary" onclick="cerrarModal()">Cancelar</button>
             <button class="modal-button primary" onclick="confirmarAsignacion()">Asignar Seleccionados</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para asignar horario -->
+<div class="modal-backdrop" id="modal-horario-backdrop">
+    <div class="modal" style="max-width: 800px;">
+        <div class="modal-header">
+            <div class="modal-title" id="modal-horario-title">Asignar Horario</div>
+            <button class="close-button" onclick="cerrarModalHorario()">×</button>
+        </div>
+        <div class="horario-container" id="horario-container">
+            <!-- Horario se generará dinámicamente -->
+        </div>
+        <div class="modal-actions">
+            <button class="modal-button secondary" onclick="cerrarModalHorario()">Cancelar</button>
+            <button class="modal-button primary" onclick="guardarHorario()">Guardar Horario</button>
         </div>
     </div>
 </div>
