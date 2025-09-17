@@ -310,8 +310,6 @@ function actualizarEstadoBotones() {
         btnModificar.disabled = false;
         btnAsignar.disabled = false;
         btnEliminar.disabled = false;
-        btnHorario.disabled = false;
-
         // Para XHTML, también necesitamos eliminar el atributo disabled
         btnModificar.removeAttribute('disabled');
         btnAsignar.removeAttribute('disabled');
@@ -322,12 +320,11 @@ function actualizarEstadoBotones() {
         btnAsignar.disabled = true;
         btnEliminar.disabled = true;
         btnHorario.disabled = true;
-
         // Para XHTML, necesitamos establecer el atributo disabled
         btnModificar.setAttribute('disabled', 'disabled');
         btnAsignar.setAttribute('disabled', 'disabled');
         btnEliminar.setAttribute('disabled', 'disabled');
-        btnHorario.setAttribute('disabled', 'disabled');
+        btnHorario.setAttribute('disabled','disabled');
     }
 }
 
@@ -465,239 +462,238 @@ function eliminarUnidad() {
 
         alert('Unidad eliminada correctamente.');
     }
-}
-
-// Función para asignar horario
-function asignarHorario() {
-    if (selectedRowId === null) {
-        alert('Por favor, seleccione una unidad para asignar horario.');
-        return;
-    }
-
-    // Buscar la unidad seleccionada
-    unidadHorario = unidadesAprendizaje.find(function(u) {
-        return u.id === selectedRowId;
-    });
-
-    if (unidadHorario) {
-        // Inicializar horario seleccionado si no existe
-        if (!unidadHorario.horario) {
-            unidadHorario.horario = {};
+    // Función para asignar horario
+    function asignarHorario() {
+        if (selectedRowId === null) {
+            alert('Por favor, seleccione una unidad para asignar horario.');
+            return;
         }
 
-        horarioSeleccionado = JSON.parse(JSON.stringify(unidadHorario.horario));
+        // Buscar la unidad seleccionada
+        unidadHorario = unidadesAprendizaje.find(function(u) {
+            return u.id === selectedRowId;
+        });
 
-        // Mostrar el modal de horario
-        mostrarModalHorario(unidadHorario);
-    }
-}
-
-// Función para mostrar el modal de horario
-function mostrarModalHorario(unidad) {
-    // Configurar el título del modal
-    document.getElementById('modal-horario-title').textContent = 'Asignar Horario: ' + unidad.nombre;
-
-    // Generar el horario
-    generarHorario(unidad);
-
-    // Mostrar el modal
-    document.getElementById('modal-horario-backdrop').style.display = 'flex';
-}
-
-// Función para generar la tabla de horario
-function generarHorario(unidad) {
-    var container = document.getElementById('horario-container');
-    container.innerHTML = '';
-
-    // Información de la unidad
-    var infoDiv = document.createElement('div');
-    infoDiv.className = 'horario-info';
-    infoDiv.innerHTML = '<h3>Información de la Unidad</h3>' +
-        '<p><strong>Nombre:</strong> ' + unidad.nombre + '</p>' +
-        '<p><strong>Horas Clase:</strong> ' + unidad.horasClase + '</p>' +
-        '<p><strong>Horas Taller:</strong> ' + unidad.horasTaller + '</p>' +
-        '<p><strong>Horas Laboratorio:</strong> ' + unidad.horasLaboratorio + '</p>' +
-        '<p><strong>Total de horas a asignar:</strong> ' +
-        (unidad.horasClase + unidad.horasTaller + unidad.horasLaboratorio) + '</p>';
-    container.appendChild(infoDiv);
-
-    // Crear tabla de horario
-    var table = document.createElement('table');
-    table.className = 'horario-table';
-
-    // Crear encabezados (días de la semana)
-    var thead = document.createElement('thead');
-    var headerRow = document.createElement('tr');
-
-    // Celda vacía para la esquina
-    var emptyHeader = document.createElement('th');
-    headerRow.appendChild(emptyHeader);
-
-    // Días de la semana
-    var dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-    dias.forEach(function(dia) {
-        var th = document.createElement('th');
-        th.textContent = dia;
-        headerRow.appendChild(th);
-    });
-
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-
-    // Crear cuerpo de la tabla (horas)
-    var tbody = document.createElement('tbody');
-
-    // Generar horas de 7:00 a 22:00 (7am a 10pm)
-    for (var hora = 7; hora <= 22; hora++) {
-        var row = document.createElement('tr');
-
-        // Celda de hora
-        var horaCell = document.createElement('td');
-        horaCell.className = 'hora-col';
-        horaCell.textContent = hora + ':00';
-        row.appendChild(horaCell);
-
-        // Celdas para cada día
-        for (var i = 0; i < 5; i++) {
-            var dia = dias[i];
-            var cell = document.createElement('td');
-            cell.className = 'horario-celda';
-            cell.setAttribute('data-dia', dia);
-            cell.setAttribute('data-hora', hora);
-
-            // Verificar si esta celda está seleccionada
-            var celdaId = dia + '_' + hora;
-            if (horarioSeleccionado[celdaId]) {
-                cell.classList.add('seleccionada');
-                cell.title = 'Hora asignada';
+        if (unidadHorario) {
+            // Inicializar horario seleccionado si no existe
+            if (!unidadHorario.horario) {
+                unidadHorario.horario = {};
             }
 
-            // Agregar evento de clic
-            cell.addEventListener('click', function() {
-                toggleCeldaHorario(this);
-            });
+            horarioSeleccionado = JSON.parse(JSON.stringify(unidadHorario.horario));
 
-            row.appendChild(cell);
+            // Mostrar el modal de horario
+            mostrarModalHorario(unidadHorario);
         }
-
-        tbody.appendChild(row);
     }
 
-    table.appendChild(tbody);
-    container.appendChild(table);
+// Función para mostrar el modal de horario
+    function mostrarModalHorario(unidad) {
+        // Configurar el título del modal
+        document.getElementById('modal-horario-title').textContent = 'Asignar Horario: ' + unidad.nombre;
 
-    // Resumen de horas seleccionadas
-    var resumenDiv = document.createElement('div');
-    resumenDiv.className = 'horario-resumen';
-    resumenDiv.innerHTML = '<h4>Resumen de Horas Asignadas</h4>' +
-        '<p id="horas-asignadas-contador">0 horas asignadas</p>';
-    container.appendChild(resumenDiv);
+        // Generar el horario
+        generarHorario(unidad);
 
-    // Actualizar contador y estado del botón
-    actualizarContadorHoras();
-    actualizarBotonGuardar();
-}
+        // Mostrar el modal
+        document.getElementById('modal-horario-backdrop').style.display = 'flex';
+    }
+
+// Función para generar la tabla de horario
+    function generarHorario(unidad) {
+        var container = document.getElementById('horario-container');
+        container.innerHTML = '';
+
+        // Información de la unidad
+        var infoDiv = document.createElement('div');
+        infoDiv.className = 'horario-info';
+        infoDiv.innerHTML = '<h3>Información de la Unidad</h3>' +
+            '<p><strong>Nombre:</strong> ' + unidad.nombre + '</p>' +
+            '<p><strong>Horas Clase:</strong> ' + unidad.horasClase + '</p>' +
+            '<p><strong>Horas Taller:</strong> ' + unidad.horasTaller + '</p>' +
+            '<p><strong>Horas Laboratorio:</strong> ' + unidad.horasLaboratorio + '</p>' +
+            '<p><strong>Total de horas a asignar:</strong> ' +
+            (unidad.horasClase + unidad.horasTaller + unidad.horasLaboratorio) + '</p>';
+        container.appendChild(infoDiv);
+
+        // Crear tabla de horario
+        var table = document.createElement('table');
+        table.className = 'horario-table';
+
+        // Crear encabezados (días de la semana)
+        var thead = document.createElement('thead');
+        var headerRow = document.createElement('tr');
+
+        // Celda vacía para la esquina
+        var emptyHeader = document.createElement('th');
+        headerRow.appendChild(emptyHeader);
+
+        // Días de la semana
+        var dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+        dias.forEach(function(dia) {
+            var th = document.createElement('th');
+            th.textContent = dia;
+            headerRow.appendChild(th);
+        });
+
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Crear cuerpo de la tabla (horas)
+        var tbody = document.createElement('tbody');
+
+        // Generar horas de 7:00 a 22:00 (7am a 10pm)
+        for (var hora = 7; hora <= 22; hora++) {
+            var row = document.createElement('tr');
+
+            // Celda de hora
+            var horaCell = document.createElement('td');
+            horaCell.className = 'hora-col';
+            horaCell.textContent = hora + ':00';
+            row.appendChild(horaCell);
+
+            // Celdas para cada día
+            for (var i = 0; i < 5; i++) {
+                var dia = dias[i];
+                var cell = document.createElement('td');
+                cell.className = 'horario-celda';
+                cell.setAttribute('data-dia', dia);
+                cell.setAttribute('data-hora', hora);
+
+                // Verificar si esta celda está seleccionada
+                var celdaId = dia + '_' + hora;
+                if (horarioSeleccionado[celdaId]) {
+                    cell.classList.add('seleccionada');
+                    cell.title = 'Hora asignada';
+                }
+
+                // Agregar evento de clic
+                cell.addEventListener('click', function() {
+                    toggleCeldaHorario(this);
+                });
+
+                row.appendChild(cell);
+            }
+
+            tbody.appendChild(row);
+        }
+
+        table.appendChild(tbody);
+        container.appendChild(table);
+
+        // Resumen de horas seleccionadas
+        var resumenDiv = document.createElement('div');
+        resumenDiv.className = 'horario-resumen';
+        resumenDiv.innerHTML = '<h4>Resumen de Horas Asignadas</h4>' +
+            '<p id="horas-asignadas-contador">0 horas asignadas</p>';
+        container.appendChild(resumenDiv);
+
+        // Actualizar contador y estado del botón
+        actualizarContadorHoras();
+        actualizarBotonGuardar();
+    }
 
 // Función para alternar selección de celda de horario
-function toggleCeldaHorario(celda) {
-    var dia = celda.getAttribute('data-dia');
-    var hora = celda.getAttribute('data-hora');
-    var celdaId = dia + '_' + hora;
+    function toggleCeldaHorario(celda) {
+        var dia = celda.getAttribute('data-dia');
+        var hora = celda.getAttribute('data-hora');
+        var celdaId = dia + '_' + hora;
 
-    if (horarioSeleccionado[celdaId]) {
-        // Deseleccionar
-        delete horarioSeleccionado[celdaId];
-        celda.classList.remove('seleccionada');
-    } else {
-        // Seleccionar
-        horarioSeleccionado[celdaId] = true;
-        celda.classList.add('seleccionada');
+        if (horarioSeleccionado[celdaId]) {
+            // Deseleccionar
+            delete horarioSeleccionado[celdaId];
+            celda.classList.remove('seleccionada');
+        } else {
+            // Seleccionar
+            horarioSeleccionado[celdaId] = true;
+            celda.classList.add('seleccionada');
+        }
+
+        // Actualizar contador y estado del botón
+        actualizarContadorHoras();
+        actualizarBotonGuardar();
     }
-
-    // Actualizar contador y estado del botón
-    actualizarContadorHoras();
-    actualizarBotonGuardar();
-}
 
 // Función para actualizar el contador de horas asignadas
-function actualizarContadorHoras() {
-    var totalHoras = Object.keys(horarioSeleccionado).length;
-    var contador = document.getElementById('horas-asignadas-contador');
-    var totalEsperado = unidadHorario.horasClase + unidadHorario.horasTaller + unidadHorario.horasLaboratorio;
+    function actualizarContadorHoras() {
+        var totalHoras = Object.keys(horarioSeleccionado).length;
+        var contador = document.getElementById('horas-asignadas-contador');
+        var totalEsperado = unidadHorario.horasClase + unidadHorario.horasTaller + unidadHorario.horasLaboratorio;
 
-    if (contador) {
-        contador.textContent = totalHoras + ' horas asignadas de ' + totalEsperado + ' requeridas';
+        if (contador) {
+            contador.textContent = totalHoras + ' horas asignadas de ' + totalEsperado + ' requeridas';
 
-        // Resaltar según el estado
-        if (totalHoras > totalEsperado) {
-            contador.style.color = '#d32f2f';
-            contador.innerHTML += ' <strong>(¡Excede el límite!)</strong>';
-        } else if (totalHoras < totalEsperado) {
-            contador.style.color = '#ff9800';
-            contador.innerHTML += ' <strong>(Faltan ' + (totalEsperado - totalHoras) + ' horas)</strong>';
-        } else {
-            contador.style.color = 'green';
-            contador.innerHTML += ' <strong>(✓ Horas completas)</strong>';
+            // Resaltar según el estado
+            if (totalHoras > totalEsperado) {
+                contador.style.color = '#d32f2f';
+                contador.innerHTML += ' <strong>(¡Excede el límite!)</strong>';
+            } else if (totalHoras < totalEsperado) {
+                contador.style.color = '#ff9800';
+                contador.innerHTML += ' <strong>(Faltan ' + (totalEsperado - totalHoras) + ' horas)</strong>';
+            } else {
+                contador.style.color = 'green';
+                contador.innerHTML += ' <strong>(✓ Horas completas)</strong>';
+            }
         }
     }
-}
 
 // Función para actualizar el estado del botón de guardar
-function actualizarBotonGuardar() {
-    var totalHoras = Object.keys(horarioSeleccionado).length;
-    var totalEsperado = unidadHorario.horasClase + unidadHorario.horasTaller + unidadHorario.horasLaboratorio;
-    var btnGuardar = document.querySelector('.modal-button.primary');
+    function actualizarBotonGuardar() {
+        var totalHoras = Object.keys(horarioSeleccionado).length;
+        var totalEsperado = unidadHorario.horasClase + unidadHorario.horasTaller + unidadHorario.horasLaboratorio;
+        var btnGuardar = document.querySelector('.modal-button.primary');
 
-    if (btnGuardar) {
-        if (totalHoras > totalEsperado) {
-            btnGuardar.disabled = true;
-            btnGuardar.setAttribute('disabled', 'disabled');
-            btnGuardar.title = 'No se puede guardar: ha excedido el número de horas permitidas';
-            btnGuardar.style.opacity = '0.6';
-            btnGuardar.style.cursor = 'not-allowed';
-        } else {
-            btnGuardar.disabled = false;
-            btnGuardar.removeAttribute('disabled');
-            btnGuardar.title = '';
-            btnGuardar.style.opacity = '1';
-            btnGuardar.style.cursor = 'pointer';
+        if (btnGuardar) {
+            if (totalHoras > totalEsperado) {
+                btnGuardar.disabled = true;
+                btnGuardar.setAttribute('disabled', 'disabled');
+                btnGuardar.title = 'No se puede guardar: ha excedido el número de horas permitidas';
+                btnGuardar.style.opacity = '0.6';
+                btnGuardar.style.cursor = 'not-allowed';
+            } else {
+                btnGuardar.disabled = false;
+                btnGuardar.removeAttribute('disabled');
+                btnGuardar.title = '';
+                btnGuardar.style.opacity = '1';
+                btnGuardar.style.cursor = 'pointer';
+            }
         }
     }
-}
 
 // Función para cerrar el modal de horario
-function cerrarModalHorario() {
-    document.getElementById('modal-horario-backdrop').style.display = 'none';
-}
+    function cerrarModalHorario() {
+        document.getElementById('modal-horario-backdrop').style.display = 'none';
+    }
 
 // Función para guardar el horario
-function guardarHorario() {
-    if (!unidadHorario) return;
+    function guardarHorario() {
+        if (!unidadHorario) return;
 
-    var totalHoras = Object.keys(horarioSeleccionado).length;
-    var totalEsperado = unidadHorario.horasClase + unidadHorario.horasTaller + unidadHorario.horasLaboratorio;
+        var totalHoras = Object.keys(horarioSeleccionado).length;
+        var totalEsperado = unidadHorario.horasClase + unidadHorario.horasTaller + unidadHorario.horasLaboratorio;
 
-    // No permitir guardar si se excede el número de horas
-    if (totalHoras > totalEsperado) {
-        alert('Error: Ha asignado ' + totalHoras + ' horas, pero la unidad solo requiere ' + totalEsperado +
-            ' horas. Por favor, ajuste el horario antes de guardar.');
-        return;
-    }
-
-    // Permitir guardar si hay menos horas pero con confirmación
-    if (totalHoras < totalEsperado) {
-        if (!confirm('Ha asignado ' + totalHoras + ' horas, pero la unidad requiere ' + totalEsperado +
-            ' horas. ¿Desea guardar de todos modos?')) {
-            return; // No guardar si el usuario cancela
+        // No permitir guardar si se excede el número de horas
+        if (totalHoras > totalEsperado) {
+            alert('Error: Ha asignado ' + totalHoras + ' horas, pero la unidad solo requiere ' + totalEsperado +
+                ' horas. Por favor, ajuste el horario antes de guardar.');
+            return;
         }
+
+        // Permitir guardar si hay menos horas pero con confirmación
+        if (totalHoras < totalEsperado) {
+            if (!confirm('Ha asignado ' + totalHoras + ' horas, pero la unidad requiere ' + totalEsperado +
+                ' horas. ¿Desea guardar de todos modos?')) {
+                return; // No guardar si el usuario cancela
+            }
+        }
+
+        // Guardar el horario en la unidad
+        unidadHorario.horario = JSON.parse(JSON.stringify(horarioSeleccionado));
+
+        // Cerrar el modal
+        cerrarModalHorario();
+
+        alert('Horario guardado correctamente para ' + unidadHorario.nombre);
     }
-
-    // Guardar el horario en la unidad
-    unidadHorario.horario = JSON.parse(JSON.stringify(horarioSeleccionado));
-
-    // Cerrar el modal
-    cerrarModalHorario();
-
-    alert('Horario guardado correctamente para ' + unidadHorario.nombre);
 }
 //]]>

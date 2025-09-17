@@ -477,3 +477,72 @@ input[type="text"], input[type="number"] {
     margin-top: 0;
     margin-bottom: 10px;
 }
+
+/* Estilos para el horario */
+.horario-container {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.horario-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+.horario-table th, .horario-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.horario-table th {
+    background-color: #f09a3c;
+    color: #000;
+    font-weight: bold;
+    min-width: 80px;
+}
+
+.hora-col {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    width: 60px;
+}
+
+.horario-celda {
+    cursor: pointer;
+    transition: background-color 0.2s;
+    height: 30px;
+}
+
+.horario-celda:hover {
+    background-color: #f0f0f0;
+}
+
+.horario-celda.seleccionada {
+    background-color: #f09a3c;
+}
+
+.horario-celda.asignada {
+    background-color: #8bc34a;
+}
+
+.horario-info {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.horario-resumen {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.horario-resumen h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
