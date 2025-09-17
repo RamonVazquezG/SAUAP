@@ -1,5 +1,12 @@
 //<![CDATA[
 // Datos de ejemplo (simulando una base de datos)
+var unidadesAprendizaje = [
+    { id: 1, nombre: "Matemáticas Básicas", profesores: ["Juan Pérez"], horasClase: 3, horasTaller: 1, horasLaboratorio: 0 },
+    { id: 2, nombre: "Programación I", profesores: ["María García", "Carlos López"], horasClase: 2, horasTaller: 2, horasLaboratorio: 2 },
+    { id: 3, nombre: "Física General", profesores: [], horasClase: 4, horasTaller: 0, horasLaboratorio: 2 },
+    { id: 4, nombre: "Química Orgánica", profesores: ["Ana Martínez"], horasClase: 3, horasTaller: 0, horasLaboratorio: 3 },
+    { id: 5, nombre: "Base de Datos", profesores: ["Roberto Sánchez", "Laura Hernández"], horasClase: 2, horasTaller: 1, horasLaboratorio: 2 }
+];
 
 // Simulación de profesores en la base de datos
 var profesores = [
@@ -13,6 +20,8 @@ var profesores = [
 ];
 
 var selectedRowId = null;
+var horarioSeleccionado = {};
+var unidadHorario = null;
 
 function createRipple(e, color) {
     const container = document.getElementById('container');
@@ -231,22 +240,22 @@ function validarFormularioAsignacion(event) {
 function cargarDatosTabla() {
     var tabla = document.getElementById('tabla-unidades');
     var tbody = tabla.querySelector('tbody');
-    
+
     // Limpiar tabla
     tbody.innerHTML = '';
-    
+
     if (unidadesAprendizaje.length === 0) {
         var row = document.createElement('tr');
         row.innerHTML = '<td colspan="7" class="no-data">No hay unidades de aprendizaje registradas</td>';
         tbody.appendChild(row);
         return;
     }
-    
+
     // Llenar tabla con datos
     unidadesAprendizaje.forEach(function(unidad) {
         var row = document.createElement('tr');
         row.setAttribute('data-id', unidad.id);
-        
+
         // Formatear la lista de profesores
         var profesoresHtml = 'Sin asignar';
         if (unidad.profesores && unidad.profesores.length > 0) {
@@ -256,22 +265,22 @@ function cargarDatosTabla() {
             });
             profesoresHtml += '</div>';
         }
-        
+
         row.innerHTML = '<td>' + unidad.id + '</td>' +
-                        '<td>' + unidad.nombre + '</td>' +
-                        '<td>' + profesoresHtml + '</td>' +
-                        '<td>' + unidad.horasClase + '</td>' +
-                        '<td>' + unidad.horasTaller + '</td>' +
-                        '<td>' + unidad.horasLaboratorio + '</td>';
-        
+            '<td>' + unidad.nombre + '</td>' +
+            '<td>' + profesoresHtml + '</td>' +
+            '<td>' + unidad.horasClase + '</td>' +
+            '<td>' + unidad.horasTaller + '</td>' +
+            '<td>' + unidad.horasLaboratorio + '</td>';
+
         // Agregar evento de clic para seleccionar fila
         row.addEventListener('click', function() {
             seleccionarFila(this);
         });
-        
+
         tbody.appendChild(row);
     });
-    
+
     // Actualizar estado de botones
     actualizarEstadoBotones();
 }
@@ -282,11 +291,11 @@ function seleccionarFila(fila) {
     filas.forEach(function(f) {
         f.classList.remove('selected');
     });
-    
+
     // Seleccionar nueva fila
     fila.classList.add('selected');
     selectedRowId = parseInt(fila.getAttribute('data-id'));
-    
+
     // Actualizar estado de botones
     actualizarEstadoBotones();
 }
@@ -295,23 +304,30 @@ function actualizarEstadoBotones() {
     var btnModificar = document.getElementById('btn-modificar');
     var btnAsignar = document.getElementById('btn-asignar');
     var btnEliminar = document.getElementById('btn-eliminar');
+    var btnHorario = document.getElementById('btn-horario');
 
     if (selectedRowId !== null) {
         btnModificar.disabled = false;
         btnAsignar.disabled = false;
         btnEliminar.disabled = false;
+        btnHorario.disabled = false;
+
         // Para XHTML, también necesitamos eliminar el atributo disabled
         btnModificar.removeAttribute('disabled');
         btnAsignar.removeAttribute('disabled');
         btnEliminar.removeAttribute('disabled');
+        btnHorario.removeAttribute('disabled');
     } else {
         btnModificar.disabled = true;
         btnAsignar.disabled = true;
         btnEliminar.disabled = true;
+        btnHorario.disabled = true;
+
         // Para XHTML, necesitamos establecer el atributo disabled
         btnModificar.setAttribute('disabled', 'disabled');
         btnAsignar.setAttribute('disabled', 'disabled');
         btnEliminar.setAttribute('disabled', 'disabled');
+        btnHorario.setAttribute('disabled', 'disabled');
     }
 }
 
@@ -320,12 +336,12 @@ function modificarUnidad() {
         alert('Por favor, seleccione una unidad para modificar.');
         return;
     }
-    
+
     // Buscar la unidad seleccionada
     var unidad = unidadesAprendizaje.find(function(u) {
         return u.id === selectedRowId;
     });
-    
+
     if (unidad) {
         alert('Modificando unidad: ' + unidad.nombre + '\nEn un sistema real, se abriría un formulario de edición.');
         // Aquí iría la lógica para abrir un formulario de modificación
@@ -337,12 +353,12 @@ function asignarProfesor() {
         alert('Por favor, seleccione una unidad para asignar profesores.');
         return;
     }
-    
+
     // Buscar la unidad seleccionada
     var unidad = unidadesAprendizaje.find(function(u) {
         return u.id === selectedRowId;
     });
-    
+
     if (unidad) {
         // Mostrar el modal de selección de profesor
         mostrarModalProfesores(unidad);
@@ -352,28 +368,28 @@ function asignarProfesor() {
 function mostrarModalProfesores(unidad) {
     // Configurar el título del modal
     document.getElementById('modal-title').textContent = 'Asignar profesores a: ' + unidad.nombre;
-    
+
     // Cargar la lista de profesores
     var profesorList = document.getElementById('profesor-list');
     profesorList.innerHTML = '';
-    
+
     profesores.forEach(function(profesor) {
         var item = document.createElement('div');
         item.className = 'profesor-item';
-        
+
         // Verificar si el profesor ya está asignado
         var estaSeleccionado = unidad.profesores.includes(profesor.nombre);
-        
-        item.innerHTML = '<input type="checkbox" class="profesor-checkbox" data-id="' + profesor.id + '" ' + 
-                         (estaSeleccionado ? 'checked' : '') + '>' +
-                         '<div class="profesor-info">' +
-                         '<div class="profesor-name">' + profesor.nombre + '</div>' +
-                         '<div class="profesor-rfc">RFC: ' + profesor.rfc + '</div>' +
-                         '</div>';
-        
+
+        item.innerHTML = '<input type="checkbox" class="profesor-checkbox" data-id="' + profesor.id + '" ' +
+            (estaSeleccionado ? 'checked' : '') + '>' +
+            '<div class="profesor-info">' +
+            '<div class="profesor-name">' + profesor.nombre + '</div>' +
+            '<div class="profesor-rfc">RFC: ' + profesor.rfc + '</div>' +
+            '</div>';
+
         profesorList.appendChild(item);
     });
-    
+
     // Mostrar el modal
     document.getElementById('modal-backdrop').style.display = 'flex';
 }
@@ -387,39 +403,39 @@ function confirmarAsignacion() {
         alert('Por favor, seleccione una unidad de aprendizaje.');
         return;
     }
-    
+
     // Obtener los profesores seleccionados
     var checkboxes = document.querySelectorAll('.profesor-checkbox:checked');
     var profesoresSeleccionados = [];
     var nombresProfesores = [];
-    
+
     checkboxes.forEach(function(checkbox) {
         var profesorId = parseInt(checkbox.getAttribute('data-id'));
         var profesor = profesores.find(function(p) {
             return p.id === profesorId;
         });
-        
+
         if (profesor) {
             profesoresSeleccionados.push(profesor.id);
             nombresProfesores.push(profesor.nombre);
         }
     });
-    
+
     // Buscar la unidad seleccionada
     var unidad = unidadesAprendizaje.find(function(u) {
         return u.id === selectedRowId;
     });
-    
+
     if (unidad) {
         // En un sistema real, esto actualizaría la base de datos
         unidad.profesores = nombresProfesores;
-        
+
         // Actualizar la tabla
         cargarDatosTabla();
-        
+
         // Cerrar el modal
         cerrarModal();
-        
+
         alert('Profesores asignados correctamente a ' + unidad.nombre);
     }
 }
@@ -429,47 +445,259 @@ function eliminarUnidad() {
         alert('Por favor, seleccione una unidad para eliminar.');
         return;
     }
-    
+
     // Buscar la unidad seleccionada
     var unidad = unidadesAprendizaje.find(function(u) {
         return u.id === selectedRowId;
     });
-    
+
     if (unidad && confirm('¿Está seguro de que desea eliminar la unidad: ' + unidad.nombre + '?')) {
         // En un sistema real, esto eliminaría el registro de la base de datos
         unidadesAprendizaje = unidadesAprendizaje.filter(function(u) {
             return u.id !== selectedRowId;
         });
-        
+
         // Reiniciar selección
         selectedRowId = null;
-        
+
         // Actualizar la tabla
         cargarDatosTabla();
-        
+
         alert('Unidad eliminada correctamente.');
     }
 }
-function cargarUnidades() {
-    fetch("consultarUA")
-        .then(resp => resp.json())
-        .then(data => {
-            const tbody = document.querySelector("#tabla-unidades tbody");
-            tbody.innerHTML = "";
-            data.forEach(ua => {
-                let row = `
-                    <tr>
-                        <td>${ua.id}</td>
-                        <td>${ua.nombre}</td>
-                        <td>${ua.profesores ? ua.profesores.map(p => p.nombre).join(", ") : ""}</td>
-                        <td>${ua.horasClase}</td>
-                        <td>${ua.horasTaller}</td>
-                        <td>${ua.horasLaboratorio}</td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        });
+
+// Función para asignar horario
+function asignarHorario() {
+    if (selectedRowId === null) {
+        alert('Por favor, seleccione una unidad para asignar horario.');
+        return;
+    }
+
+    // Buscar la unidad seleccionada
+    unidadHorario = unidadesAprendizaje.find(function(u) {
+        return u.id === selectedRowId;
+    });
+
+    if (unidadHorario) {
+        // Inicializar horario seleccionado si no existe
+        if (!unidadHorario.horario) {
+            unidadHorario.horario = {};
+        }
+
+        horarioSeleccionado = JSON.parse(JSON.stringify(unidadHorario.horario));
+
+        // Mostrar el modal de horario
+        mostrarModalHorario(unidadHorario);
+    }
 }
 
+// Función para mostrar el modal de horario
+function mostrarModalHorario(unidad) {
+    // Configurar el título del modal
+    document.getElementById('modal-horario-title').textContent = 'Asignar Horario: ' + unidad.nombre;
+
+    // Generar el horario
+    generarHorario(unidad);
+
+    // Mostrar el modal
+    document.getElementById('modal-horario-backdrop').style.display = 'flex';
+}
+
+// Función para generar la tabla de horario
+function generarHorario(unidad) {
+    var container = document.getElementById('horario-container');
+    container.innerHTML = '';
+
+    // Información de la unidad
+    var infoDiv = document.createElement('div');
+    infoDiv.className = 'horario-info';
+    infoDiv.innerHTML = '<h3>Información de la Unidad</h3>' +
+        '<p><strong>Nombre:</strong> ' + unidad.nombre + '</p>' +
+        '<p><strong>Horas Clase:</strong> ' + unidad.horasClase + '</p>' +
+        '<p><strong>Horas Taller:</strong> ' + unidad.horasTaller + '</p>' +
+        '<p><strong>Horas Laboratorio:</strong> ' + unidad.horasLaboratorio + '</p>' +
+        '<p><strong>Total de horas a asignar:</strong> ' +
+        (unidad.horasClase + unidad.horasTaller + unidad.horasLaboratorio) + '</p>';
+    container.appendChild(infoDiv);
+
+    // Crear tabla de horario
+    var table = document.createElement('table');
+    table.className = 'horario-table';
+
+    // Crear encabezados (días de la semana)
+    var thead = document.createElement('thead');
+    var headerRow = document.createElement('tr');
+
+    // Celda vacía para la esquina
+    var emptyHeader = document.createElement('th');
+    headerRow.appendChild(emptyHeader);
+
+    // Días de la semana
+    var dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+    dias.forEach(function(dia) {
+        var th = document.createElement('th');
+        th.textContent = dia;
+        headerRow.appendChild(th);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Crear cuerpo de la tabla (horas)
+    var tbody = document.createElement('tbody');
+
+    // Generar horas de 7:00 a 22:00 (7am a 10pm)
+    for (var hora = 7; hora <= 22; hora++) {
+        var row = document.createElement('tr');
+
+        // Celda de hora
+        var horaCell = document.createElement('td');
+        horaCell.className = 'hora-col';
+        horaCell.textContent = hora + ':00';
+        row.appendChild(horaCell);
+
+        // Celdas para cada día
+        for (var i = 0; i < 5; i++) {
+            var dia = dias[i];
+            var cell = document.createElement('td');
+            cell.className = 'horario-celda';
+            cell.setAttribute('data-dia', dia);
+            cell.setAttribute('data-hora', hora);
+
+            // Verificar si esta celda está seleccionada
+            var celdaId = dia + '_' + hora;
+            if (horarioSeleccionado[celdaId]) {
+                cell.classList.add('seleccionada');
+                cell.title = 'Hora asignada';
+            }
+
+            // Agregar evento de clic
+            cell.addEventListener('click', function() {
+                toggleCeldaHorario(this);
+            });
+
+            row.appendChild(cell);
+        }
+
+        tbody.appendChild(row);
+    }
+
+    table.appendChild(tbody);
+    container.appendChild(table);
+
+    // Resumen de horas seleccionadas
+    var resumenDiv = document.createElement('div');
+    resumenDiv.className = 'horario-resumen';
+    resumenDiv.innerHTML = '<h4>Resumen de Horas Asignadas</h4>' +
+        '<p id="horas-asignadas-contador">0 horas asignadas</p>';
+    container.appendChild(resumenDiv);
+
+    // Actualizar contador y estado del botón
+    actualizarContadorHoras();
+    actualizarBotonGuardar();
+}
+
+// Función para alternar selección de celda de horario
+function toggleCeldaHorario(celda) {
+    var dia = celda.getAttribute('data-dia');
+    var hora = celda.getAttribute('data-hora');
+    var celdaId = dia + '_' + hora;
+
+    if (horarioSeleccionado[celdaId]) {
+        // Deseleccionar
+        delete horarioSeleccionado[celdaId];
+        celda.classList.remove('seleccionada');
+    } else {
+        // Seleccionar
+        horarioSeleccionado[celdaId] = true;
+        celda.classList.add('seleccionada');
+    }
+
+    // Actualizar contador y estado del botón
+    actualizarContadorHoras();
+    actualizarBotonGuardar();
+}
+
+// Función para actualizar el contador de horas asignadas
+function actualizarContadorHoras() {
+    var totalHoras = Object.keys(horarioSeleccionado).length;
+    var contador = document.getElementById('horas-asignadas-contador');
+    var totalEsperado = unidadHorario.horasClase + unidadHorario.horasTaller + unidadHorario.horasLaboratorio;
+
+    if (contador) {
+        contador.textContent = totalHoras + ' horas asignadas de ' + totalEsperado + ' requeridas';
+
+        // Resaltar según el estado
+        if (totalHoras > totalEsperado) {
+            contador.style.color = '#d32f2f';
+            contador.innerHTML += ' <strong>(¡Excede el límite!)</strong>';
+        } else if (totalHoras < totalEsperado) {
+            contador.style.color = '#ff9800';
+            contador.innerHTML += ' <strong>(Faltan ' + (totalEsperado - totalHoras) + ' horas)</strong>';
+        } else {
+            contador.style.color = 'green';
+            contador.innerHTML += ' <strong>(✓ Horas completas)</strong>';
+        }
+    }
+}
+
+// Función para actualizar el estado del botón de guardar
+function actualizarBotonGuardar() {
+    var totalHoras = Object.keys(horarioSeleccionado).length;
+    var totalEsperado = unidadHorario.horasClase + unidadHorario.horasTaller + unidadHorario.horasLaboratorio;
+    var btnGuardar = document.querySelector('.modal-button.primary');
+
+    if (btnGuardar) {
+        if (totalHoras > totalEsperado) {
+            btnGuardar.disabled = true;
+            btnGuardar.setAttribute('disabled', 'disabled');
+            btnGuardar.title = 'No se puede guardar: ha excedido el número de horas permitidas';
+            btnGuardar.style.opacity = '0.6';
+            btnGuardar.style.cursor = 'not-allowed';
+        } else {
+            btnGuardar.disabled = false;
+            btnGuardar.removeAttribute('disabled');
+            btnGuardar.title = '';
+            btnGuardar.style.opacity = '1';
+            btnGuardar.style.cursor = 'pointer';
+        }
+    }
+}
+
+// Función para cerrar el modal de horario
+function cerrarModalHorario() {
+    document.getElementById('modal-horario-backdrop').style.display = 'none';
+}
+
+// Función para guardar el horario
+function guardarHorario() {
+    if (!unidadHorario) return;
+
+    var totalHoras = Object.keys(horarioSeleccionado).length;
+    var totalEsperado = unidadHorario.horasClase + unidadHorario.horasTaller + unidadHorario.horasLaboratorio;
+
+    // No permitir guardar si se excede el número de horas
+    if (totalHoras > totalEsperado) {
+        alert('Error: Ha asignado ' + totalHoras + ' horas, pero la unidad solo requiere ' + totalEsperado +
+            ' horas. Por favor, ajuste el horario antes de guardar.');
+        return;
+    }
+
+    // Permitir guardar si hay menos horas pero con confirmación
+    if (totalHoras < totalEsperado) {
+        if (!confirm('Ha asignado ' + totalHoras + ' horas, pero la unidad requiere ' + totalEsperado +
+            ' horas. ¿Desea guardar de todos modos?')) {
+            return; // No guardar si el usuario cancela
+        }
+    }
+
+    // Guardar el horario en la unidad
+    unidadHorario.horario = JSON.parse(JSON.stringify(horarioSeleccionado));
+
+    // Cerrar el modal
+    cerrarModalHorario();
+
+    alert('Horario guardado correctamente para ' + unidadHorario.nombre);
+}
 //]]>
