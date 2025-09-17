@@ -223,11 +223,8 @@
 <div class="login-container">
     <div class="login-header">SAUAP</div>
 
-    <!-- Mensaje de error -->
-    <div id="error-message" class="error-message"></div>
-
     <div class="login-form">
-        <form id="loginForm" action="#" method="post">
+        <form id="loginForm" action="LoginServlet" method="post">
             <div class="form-group">
                 <label for="usuario">Usuario:</label>
                 <input type="text" id="usuario" name="usuario" required="required" />
@@ -236,7 +233,7 @@
                 <label for="contrasena">Contraseña:</label>
                 <input type="password" id="contrasena" name="contrasena" required="required" />
             </div>
-            <button type="submit" class="login-button" id="loginButton" onclick="iniciarSesion(event)">Iniciar sesión</button>
+            <button type="submit" class="login-button">Iniciar sesión</button>
         </form>
     </div>
     <div class="login-footer">
