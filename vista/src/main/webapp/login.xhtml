@@ -23,6 +23,7 @@
             width: 400px;
             padding: 30px;
             text-align: center;
+            position: relative;
         }
 
         .login-header {
@@ -103,6 +104,29 @@
                 opacity: 0;
             }
         }
+
+        /* Estilos para el mensaje de error */
+        .error-message {
+            color: #d9534f;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+            font-weight: bold;
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% {transform: translateX(0);}
+            10%, 30%, 50%, 70%, 90% {transform: translateX(-5px);}
+            20%, 40%, 60%, 80% {transform: translateX(5px);}
+        }
     </style>
     <script type="text/javascript">
         //<![CDATA[
@@ -126,25 +150,71 @@
             button.appendChild(circle);
         }
 
+        // Credenciales válidas (en un caso real, esto se validaría en el servidor)
+        var usuariosValidos = {
+            "admin": "password123",
+            "usuario": "clave456",
+            "invitado": "acceso789"
+        };
+
         function iniciarSesion(event) {
             event.preventDefault();
             createRipple(event);
 
             var usuario = document.getElementById("usuario").value;
             var contrasena = document.getElementById("contrasena").value;
+            var errorMessage = document.getElementById("error-message");
+            var loginContainer = document.querySelector(".login-container");
+
+            // Ocultar mensaje de error previo
+            errorMessage.style.display = 'none';
 
             if (usuario && contrasena) {
-                setTimeout(function() {
-                    window.location.href = "sauap.xhtml";
-                }, 800);
+                // Validar credenciales (simulada)
+                if (usuariosValidos[usuario] && usuariosValidos[usuario] === contrasena) {
+                    // Credenciales válidas
+                    setTimeout(function() {
+                        window.location.href = "sauap.xhtml";
+                    }, 800);
+                } else {
+                    // Credenciales inválidas
+                    setTimeout(function() {
+                        errorMessage.textContent = "Usuario o contraseña incorrectos. Por favor, inténtelo de nuevo.";
+                        errorMessage.style.display = 'block';
+
+                        // Agregar efecto de sacudida al contenedor
+                        loginContainer.classList.add('shake');
+                        setTimeout(function() {
+                            loginContainer.classList.remove('shake');
+                        }, 500);
+
+                        // Limpiar campo de contraseña
+                        document.getElementById("contrasena").value = "";
+                    }, 800);
+                }
             } else {
-                alert("Por favor, complete todos los campos.");
+                // Campos vacíos
+                errorMessage.textContent = "Por favor, complete todos los campos.";
+                errorMessage.style.display = 'block';
+
+                // Agregar efecto de sacudida al contenedor
+                loginContainer.classList.add('shake');
+                setTimeout(function() {
+                    loginContainer.classList.remove('shake');
+                }, 500);
             }
         }
 
         document.addEventListener("DOMContentLoaded", function() {
             var loginButton = document.getElementById("loginButton");
             loginButton.addEventListener("click", createRipple, false);
+
+            // Permitir enviar el formulario con la tecla Enter
+            document.getElementById("loginForm").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    iniciarSesion(event);
+                }
+            });
         }, false);
         //]]>
     </script>
@@ -152,6 +222,10 @@
 <body>
 <div class="login-container">
     <div class="login-header">SAUAP</div>
+
+    <!-- Mensaje de error -->
+    <div id="error-message" class="error-message"></div>
+
     <div class="login-form">
         <form id="loginForm" action="#" method="post">
             <div class="form-group">
