@@ -3,16 +3,17 @@ package mx.sauap.facade;
 import mx.sauap.delegate.DelegateUnidadAprendizaje;
 import mx.sauap.entity.UnidadAprendizaje;
 
+import java.util.List;
+
 public class FacadeUnidadAprendizaje {
 
-    private final DelegateUnidadAprendizaje delegateUnidadAprendizaje;
+    private final DelegateUnidadAprendizaje delegate = new DelegateUnidadAprendizaje();
 
-    public FacadeUnidadAprendizaje() {
-        this.delegateUnidadAprendizaje = new DelegateUnidadAprendizaje();
+    public void saveUnidad(UnidadAprendizaje unidad) {
+        delegate.saveUnidad(unidad);
     }
 
-    public void guardarUnidadAprendizaje(UnidadAprendizaje unidadAprendizaje){
-        delegateUnidadAprendizaje.saveUnidadAprendizaje(unidadAprendizaje);
+    public List<UnidadAprendizaje> getAllUnidades() {
+        return delegate.findAll();
     }
-
 }

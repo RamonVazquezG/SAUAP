@@ -15,7 +15,7 @@ public class UnidadAprendizajeDAO extends AbstractDAO<UnidadAprendizaje> {
         this.entityManager = em;
     }
 
-    public List<UnidadAprendizaje> obtenerTodos(){
+    public List<UnidadAprendizaje> findAll(){
         return entityManager
                 .createQuery("SELECT a FROM UnidadAprendizaje a", UnidadAprendizaje.class)
                 .getResultList();

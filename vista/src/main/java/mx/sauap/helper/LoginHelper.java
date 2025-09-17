@@ -23,7 +23,7 @@ public class LoginHelper implements Serializable {
     public Usuario Login(String username, String password){
         return ServiceFacadeLocator.getInstanceFacadeUsuario().login(password, username);
     }
-
+//hola//
 
 
 }

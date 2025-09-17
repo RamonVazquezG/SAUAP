@@ -11,8 +11,10 @@ public class FacadeProfesor {
         this.delegateProfesor = new DelegateProfesor();
     }
 
-    public void guardarProfesor(Profesor profesor){
+    public void saveProfesor(Profesor profesor){
         delegateProfesor.saveProfesor(profesor);
     }
-
+    public boolean existeRFC(String rfc){
+        return delegateProfesor.existeRFC(rfc);
+    }
 }

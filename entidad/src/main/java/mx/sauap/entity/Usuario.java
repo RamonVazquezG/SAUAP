@@ -17,10 +17,10 @@ public class Usuario {
     @Column(name = "usuario", nullable = false, length = 50)
     private String usuario;
 
-    @Size(max = 255)
+    @Size(max = 50)
     @NotNull
     @Column(name = "`contraseña`", nullable = false)
-    private String contraseña;
+    private String contrasena;
 
     public Integer getId() {
         return id;
@@ -39,11 +39,11 @@ public class Usuario {
     }
 
     public String getContraseña() {
-        return contraseña;
+        return contrasena;
     }
 
     public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+        this.contrasena = contraseña;
     }
 
 }

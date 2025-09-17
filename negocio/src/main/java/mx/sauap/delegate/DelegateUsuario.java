@@ -6,20 +6,19 @@ import mx.sauap.integration.ServiceLocator;
 import java.util.List;
 
 public class DelegateUsuario {
-    public Usuario login(String password, String username){
-        Usuario usuario = new Usuario();
+
+    public Usuario login(String username, String password){
         List<Usuario> usuarios = ServiceLocator.getInstanceUsuarioDAO().findAll();
 
-        for(Usuario us:usuarios){
-            if(us.getContraseña().equalsIgnoreCase(password) && us.getUsuario().equalsIgnoreCase(username)){
-                usuario = us;
+        for(Usuario us : usuarios){
+            if(us.getUsuario().equals(username) && us.getContraseña().equals(password)){
+                return us; // retorna inmediatamente si se encuentra
             }
         }
-        return usuario;
+        return null; // no encontrado
     }
 
-    public void saveUsario(Usuario usuario){
+    public void saveUsuario(Usuario usuario){
         ServiceLocator.getInstanceUsuarioDAO().save(usuario);
     }
-
 }

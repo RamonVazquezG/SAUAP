@@ -20,6 +20,18 @@ public class UsuarioDAO extends AbstractDAO<Usuario> {
                 .getResultList();
     }
 
+    public Usuario autenticar(String usuario, String contrasena) {
+        try {
+            return entityManager
+                    .createQuery("SELECT u FROM Usuario u WHERE u.usuario = :usuario AND u.contrasena = :contrasena", Usuario.class)
+                    .setParameter("usuario", usuario)
+                    .setParameter("contrasena", contrasena)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     @Override
     public EntityManager getEntityManager() {
         return entityManager;

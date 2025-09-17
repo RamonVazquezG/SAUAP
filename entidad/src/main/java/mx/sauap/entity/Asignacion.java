@@ -6,10 +6,15 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalTime;
-// rama desarrollo
+
 @Entity
 @Table(name = "asignacion")
 public class Asignacion {
+
+    public enum DiaSemana {
+        LUNES, MARTES, MIERCOLES, JUEVES, VIERNES
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_asignacion", nullable = false)
@@ -28,9 +33,10 @@ public class Asignacion {
     private UnidadAprendizaje idUnidad;
 
     @NotNull
-    @Lob
-    @Column(name = "dia_semana", nullable = false)
-    private String diaSemana;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "dia_semana", nullable = false,
+            columnDefinition = "ENUM('LUNES','MARTES','MIERCOLES','JUEVES','VIERNES')")
+    private DiaSemana diaSemana;
 
     @NotNull
     @Column(name = "hora_inicio", nullable = false)
@@ -40,52 +46,22 @@ public class Asignacion {
     @Column(name = "hora_fin", nullable = false)
     private LocalTime horaFin;
 
-    public Integer getId() {
-        return id;
-    }
+    // Getters y Setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public Profesor getIdProfesor() { return idProfesor; }
+    public void setIdProfesor(Profesor idProfesor) { this.idProfesor = idProfesor; }
 
-    public Profesor getIdProfesor() {
-        return idProfesor;
-    }
+    public UnidadAprendizaje getIdUnidad() { return idUnidad; }
+    public void setIdUnidad(UnidadAprendizaje idUnidad) { this.idUnidad = idUnidad; }
 
-    public void setIdProfesor(Profesor idProfesor) {
-        this.idProfesor = idProfesor;
-    }
+    public DiaSemana getDiaSemana() { return diaSemana; }
+    public void setDiaSemana(DiaSemana diaSemana) { this.diaSemana = diaSemana; }
 
-    public UnidadAprendizaje getIdUnidad() {
-        return idUnidad;
-    }
+    public LocalTime getHoraInicio() { return horaInicio; }
+    public void setHoraInicio(LocalTime horaInicio) { this.horaInicio = horaInicio; }
 
-    public void setIdUnidad(UnidadAprendizaje idUnidad) {
-        this.idUnidad = idUnidad;
-    }
-
-    public String getDiaSemana() {
-        return diaSemana;
-    }
-
-    public void setDiaSemana(String diaSemana) {
-        this.diaSemana = diaSemana;
-    }
-
-    public LocalTime getHoraInicio() {
-        return horaInicio;
-    }
-
-    public void setHoraInicio(LocalTime horaInicio) {
-        this.horaInicio = horaInicio;
-    }
-
-    public LocalTime getHoraFin() {
-        return horaFin;
-    }
-
-    public void setHoraFin(LocalTime horaFin) {
-        this.horaFin = horaFin;
-    }
-
+    public LocalTime getHoraFin() { return horaFin; }
+    public void setHoraFin(LocalTime horaFin) { this.horaFin = horaFin; }
 }
